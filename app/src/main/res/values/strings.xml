@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Daily Quotes</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="categories_heading">Categories</string>
+    <string name="title_name">title</string>
+    <string name="quotes_heading">Quotes</string>
+    <string name="quote_text">Quote Text</string>
+    <string name="writer_name">writer_name</string>
+    <string name="next_btn">Next</string>
+    <string name="prev">Prev</string>
+    <string name="quote">Quote:</string>
+    <string name="author">Author:</string>
+    <string name="back">Back</string>
+    <string name="add_quote">Add Quote</string>
+    <string name="add_your_own_quote">Add your own quote</string>
+    <string name="_dialog">Author</string>
+    <string name="quote_dialog">Quote</string>
+    <string name="favorites_text">Favorites</string>
+</resources>
