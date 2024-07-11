@@ -4,6 +4,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -29,8 +30,6 @@ class QuotesFragment : Fragment() {
     private  var _binding: FragmentQuotesBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: QuoteViewModel
-    private var motivationNumber : Int = 0
-    private  var quotesLists =  ArrayList<Quotedataclass>()
     private val args by navArgs<QuotesFragmentArgs>()
 
     override fun onCreateView(
@@ -47,9 +46,12 @@ class QuotesFragment : Fragment() {
         val getName = args.name
         binding.headerTitle.text = getName
 
-        viewModel.getQuotesByCategory(getName)
+        viewModel.quotes.observe(viewLifecycleOwner){
+            viewModel.updateQuoteIndex()
+            Log.e("UserQuotes", "UserQuotes: $it")
+        }
 
-        //val currentQuote = quotesLists[motivationNumber]
+        viewModel.getQuotesByCategory(getName)
 
         viewModel.currentQuote.observe(viewLifecycleOwner){
             quote ->
@@ -75,27 +77,11 @@ class QuotesFragment : Fragment() {
         // set prev button to get previous quote
         binding.prevButton.setOnClickListener{
             viewModel.previousQuote()
-            /*// decrement motivationNumber to get previous quote from QuoteDataBase
-            motivationNumber--
-
-            // check if motivationNumber is smaller than 0 then get last quote from QuoteDataBase
-            if (motivationNumber < 0){
-                motivationNumber = quotesLists.size - 1
-            }
-*/
-            //setQuotesToTextView()
         }
 
         // set next button to get next quote
         binding.nextButton.setOnClickListener{
             viewModel.nextQuote()
-            // increment motivationNumber to get next quote from QuoteDataBase
-//            motivationNumber++
-//            // check if more quotes are available from QuoteDataBase
-//            if (motivationNumber >= quotesLists.size){
-//                motivationNumber = 0
-//            }
-//            setQuotesToTextView()
         }
 
         return binding.root

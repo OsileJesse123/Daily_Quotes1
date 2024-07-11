@@ -23,11 +23,11 @@ interface QuoteDao {
     @Delete
     suspend fun delete(quote: Quotedataclass)
 
-    @Query("SELECT * FROM quote_table WHERE category is :category")
+    @Query("SELECT * FROM quote_table WHERE :category = category")
     fun getQuotesByCategory(category: String): LiveData<List<Quotedataclass>>
 
 
-    @Query("SELECT * FROM quote_table WHERE isFavorite != 1 ORDER BY id DESC")
+    @Query("SELECT * FROM quote_table WHERE category = 'name' ORDER BY id DESC")
     fun getAllUserQuote(): LiveData<List<Quotedataclass>>
 
     @Query("SELECT * FROM quote_table  WHERE isFavorite = 1")

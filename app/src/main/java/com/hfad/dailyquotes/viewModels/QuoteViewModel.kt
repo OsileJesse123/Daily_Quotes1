@@ -12,34 +12,28 @@ import kotlinx.coroutines.launch
 
 class QuoteViewModel(private var repository: QuoteRepository): ViewModel() {
 
-    //val getEveryQuote = repository.allQuotes()
 
-    val quotes: LiveData<List<Quotedataclass>>
+    private val _quoteIndex = MutableLiveData(-1)
 
-    val currentQuote: LiveData<Quotedataclass?>
+    private val category = MutableLiveData("")
 
-    val _quoteIndex = MutableLiveData(0)
-    private val quoteIndex: LiveData<Int> = _quoteIndex
-
-    private val category = MutableLiveData("Life")
-
-    init {
-        quotes = category.switchMap {
+    val quotes: LiveData<List<Quotedataclass>> = category.switchMap {
             categoryName ->
-            val theQuotes = repository.getQuotesByCategory(categoryName)
-           Log.e("Categories", "Quotes: ${theQuotes.value}")
-            theQuotes
-        }
-        currentQuote = _quoteIndex.switchMap {
+        repository.getQuotesByCategory(categoryName)
+    }
+
+    val currentQuote: LiveData<Quotedataclass?> = _quoteIndex.switchMap {
             index ->
-            if (!quotes.value.isNullOrEmpty()){
-                val myQuote = quotes.value!![index]
-                Log.e("Quote", "Quote: $myQuote")
-                MutableLiveData(myQuote)
-            } else{
-                MutableLiveData(null)
-            }
+        if (!quotes.value.isNullOrEmpty()){
+            val myQuote = quotes.value!![index]
+            MutableLiveData(myQuote)
+        } else{
+            MutableLiveData(null)
         }
+    }
+
+    fun updateQuoteIndex(){
+        if (_quoteIndex.value == -1) _quoteIndex.value = 0
     }
 
     fun favoriteQuote(quote:List<Quotedataclass>){
@@ -64,7 +58,6 @@ class QuoteViewModel(private var repository: QuoteRepository): ViewModel() {
 
     fun getQuotesByCategory(categoryText: String){
         category.value = categoryText
-        Log.e("Category", "Category: ${category.value}")
     }
 
     fun previousQuote(){
@@ -73,17 +66,16 @@ class QuoteViewModel(private var repository: QuoteRepository): ViewModel() {
             if (index > 0){
                 _quoteIndex.value = index - 1
             }
-            Log.e("Quote", "Quote: ${currentQuote.value}, index: ${_quoteIndex.value}")
         }
     }
 
     fun nextQuote(){
         _quoteIndex.value?.let {
                 index ->
-            if (index < (quotes.value?.size ?: 0)){
+            val quotesListSize = quotes.value?.size ?: 0
+            if (index < (quotesListSize - 1)){
                 _quoteIndex.value = index + 1
             }
-            Log.e("Quote", "Quote: ${currentQuote.value}, index: ${_quoteIndex.value}, quotes: ${quotes.value}")
         }
     }
 
